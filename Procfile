@@ -1,1 +1,1 @@
-web: python regexxit.py
+beast: python regexxit.py
