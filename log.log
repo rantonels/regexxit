@@ -1,0 +1,98 @@
+DEBUG:root:starting to Reddit
+DEBUG:root:starting to Reddit
+DEBUG:root:login
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.reddit.com
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/login/.json HTTP/1.1" 200 None
+DEBUG:root:getting modqueue
+DEBUG:requests.packages.urllib3.connectionpool:"GET /subreddits/mine/moderator/.json?limit=1024 HTTP/1.1" 200 7080
+DEBUG:root:starting to Reddit
+INFO:root:login
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.reddit.com
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/login/.json HTTP/1.1" 200 None
+INFO:root:getting modqueue
+DEBUG:requests.packages.urllib3.connectionpool:"GET /subreddits/mine/moderator/.json?limit=1024 HTTP/1.1" 200 7084
+DEBUG:root:starting to Reddit
+INFO:root:login
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.reddit.com
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/login/.json HTTP/1.1" 200 None
+INFO:root:getting modqueue
+DEBUG:requests.packages.urllib3.connectionpool:"GET /subreddits/mine/moderator/.json?limit=1024 HTTP/1.1" 200 7084
+DEBUG:requests.packages.urllib3.connectionpool:"GET /r/askscience/about/modqueue/.json HTTP/1.1" 200 14310
+DEBUG:root:starting to Reddit
+INFO:root:login
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.reddit.com
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/login/.json HTTP/1.1" 200 None
+INFO:root:getting modqueue
+DEBUG:requests.packages.urllib3.connectionpool:"GET /subreddits/mine/moderator/.json?limit=1024 HTTP/1.1" 200 7083
+DEBUG:requests.packages.urllib3.connectionpool:"GET /r/askscience/about/modqueue/.json HTTP/1.1" 200 14429
+DEBUG:root:starting to Reddit
+INFO:root:login
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.reddit.com
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/login/.json HTTP/1.1" 200 None
+INFO:root:getting modqueue
+DEBUG:requests.packages.urllib3.connectionpool:"GET /subreddits/mine/moderator/.json?limit=1024 HTTP/1.1" 200 7083
+DEBUG:requests.packages.urllib3.connectionpool:"GET /r/askscience/about/modqueue/.json HTTP/1.1" 200 14428
+DEBUG:root:starting to Reddit
+INFO:root:login
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.reddit.com
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/login/.json HTTP/1.1" 200 None
+INFO:root:getting modqueue
+DEBUG:requests.packages.urllib3.connectionpool:"GET /subreddits/mine/moderator/.json?limit=1024 HTTP/1.1" 200 5639
+DEBUG:requests.packages.urllib3.connectionpool:"GET /r/askscience/about/modqueue/.json HTTP/1.1" 200 29780
+DEBUG:root:starting to Reddit
+INFO:root:login
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.reddit.com
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/login/.json HTTP/1.1" 200 None
+INFO:root:getting modqueue
+DEBUG:requests.packages.urllib3.connectionpool:"GET /subreddits/mine/moderator/.json?limit=1024 HTTP/1.1" 200 5640
+DEBUG:requests.packages.urllib3.connectionpool:"GET /r/askscience/about/modqueue/.json HTTP/1.1" 200 30226
+DEBUG:root:starting to Reddit
+INFO:root:login
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.reddit.com
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/login/.json HTTP/1.1" 200 None
+INFO:root:getting modqueue
+DEBUG:requests.packages.urllib3.connectionpool:"GET /subreddits/mine/moderator/.json?limit=1024 HTTP/1.1" 200 5640
+DEBUG:requests.packages.urllib3.connectionpool:"GET /r/askscience/about/modqueue/.json HTTP/1.1" 200 30224
+DEBUG:root:starting to Reddit
+INFO:root:login
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.reddit.com
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/login/.json HTTP/1.1" 200 None
+INFO:root:getting modqueue
+DEBUG:requests.packages.urllib3.connectionpool:"GET /subreddits/mine/moderator/.json?limit=1024 HTTP/1.1" 200 5641
+DEBUG:requests.packages.urllib3.connectionpool:"GET /r/askscience/about/modqueue/.json HTTP/1.1" 200 30273
+INFO:root:Under magnetar level magnetic field strength; how does particle physics work?
+DEBUG:root:starting to Reddit
+INFO:root:login
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.reddit.com
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/login/.json HTTP/1.1" 200 None
+INFO:root:getting modqueue
+DEBUG:requests.packages.urllib3.connectionpool:"GET /subreddits/mine/moderator/.json?limit=1024 HTTP/1.1" 200 5638
+DEBUG:requests.packages.urllib3.connectionpool:"GET /r/askscience/about/modqueue/.json HTTP/1.1" 200 30367
+INFO:root:Under magnetar level magnetic field strength; how does particle physics work?
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/compose/.json HTTP/1.1" 200 24
+DEBUG:root:starting to Reddit
+INFO:root:login
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.reddit.com
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/login/.json HTTP/1.1" 200 None
+INFO:root:getting modqueue
+DEBUG:requests.packages.urllib3.connectionpool:"GET /subreddits/mine/moderator/.json?limit=1024 HTTP/1.1" 200 5645
+DEBUG:requests.packages.urllib3.connectionpool:"GET /r/askscience/about/modqueue/.json HTTP/1.1" 200 30368
+INFO:root:Under magnetar level magnetic field strength; how does particle physics work?
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/compose/.json HTTP/1.1" 200 24
+DEBUG:root:starting to Reddit
+INFO:root:login
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.reddit.com
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/login/.json HTTP/1.1" 200 None
+INFO:root:getting modqueue
+DEBUG:requests.packages.urllib3.connectionpool:"GET /subreddits/mine/moderator/.json?limit=1024 HTTP/1.1" 200 5639
+DEBUG:requests.packages.urllib3.connectionpool:"GET /r/askscience/about/modqueue/.json HTTP/1.1" 200 30207
+INFO:root:Under magnetar level magnetic field strength; how does particle physics work?
+DEBUG:root:starting to Reddit
+INFO:root:login
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): api.reddit.com
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/login/.json HTTP/1.1" 200 None
+INFO:root:getting modqueue
+DEBUG:requests.packages.urllib3.connectionpool:"GET /subreddits/mine/moderator/.json?limit=1024 HTTP/1.1" 200 5641
+DEBUG:requests.packages.urllib3.connectionpool:"GET /r/askscience/about/modqueue/.json HTTP/1.1" 200 30229
+INFO:root:Under magnetar level magnetic field strength; how does particle physics work?
+DEBUG:requests.packages.urllib3.connectionpool:"POST /api/compose/.json HTTP/1.1" 200 24
