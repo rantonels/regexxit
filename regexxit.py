@@ -46,8 +46,12 @@ rantonels.wordlist = ['string','supersymmetry','holography','hologram','holograp
 sol = User()
 sol.wordlist = ["crocodile", "alligator", "dinosaur", "fossil", "paleontology", "paleontologist"]
 
+vl = User()
+vl.wordlist = [ "galax", "orbit", "neutron", "nuclear", "fart"]
+
 db.ulist["rantonels"] = rantonels
 db.ulist["StringOfLights"] = sol
+db.ulist["VeryLittle"] = vl
 
 
 
