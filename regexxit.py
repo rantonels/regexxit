@@ -3,6 +3,55 @@ import logging
 from logging.handlers import RotatingFileHandler
 import sys
 import time
+import cPickle
+
+
+# user class def
+
+class User:
+    wordlist = []
+
+
+# database
+
+class Database:
+    ulist = {}
+    processed = set([])
+
+    def getUser(self,uname):
+        if uname in self.ulist:
+            return self.ulist[name]
+        else:
+            return None
+
+    def getTotalWordlist(self):
+        out = []
+        for uname in self.ulist:
+            u = self.ulist[uname]
+            out += [ (w,uname) for w in u.wordlist]
+        return out
+
+
+try:
+    donelist = cPickle.load(open("donelist",'r'))
+except:
+    logging.warning("donelist file not found, creating from scratch")
+    donelist = set([])
+
+db = Database()
+
+rantonels = User()
+rantonels.wordlist = ['string','supersymmetry','holography','hologram','holographic','monopole','field','grand uni','great uni','quantum','entropy','planck','plank','renormalization','neutrino','blackhole','black hole','Hawking','spacetime','space-time','extra dimension','calabi','m theory','m-theory']
+
+sol = User()
+sol.wordlist = ["crocodile", "alligator", "dinosaur", "fossil", "paleontology", "paleontologist"]
+
+db.ulist["rantonels"] = rantonels
+db.ulist["StringOfLights"] = sol
+
+
+
+
 
 log = logging.getLogger('')
 log.setLevel(logging.DEBUG)
@@ -24,37 +73,58 @@ log.info("login")
 r.login(username,password,disable_warning=True)
 
 r.send_message('rantonels','Hey daddy!','starting up!')
-wordlist = ['string','supersymmetry','holography','hologram','holographic','monopole','field','grand uni','great uni','quantum','entropy','planck','plank','renormalization','neutrino','blackhole','black hole','Hawking','spacetime','space-time','extra dimension','calabi','m theory','m-theory']
 
-processed = set([])
 
 
 while True:
     log.info("getting modqueue")
     queue = r.get_mod_queue(subreddit="askscience")
 
+    log.debug("recomputing wordlist")
+
+    wordlist = db.getTotalWordlist()
+
 
     for item in queue:
+
+        if item.id in donelist:
+                continue
+
+
         if isinstance(item,praw.objects.Comment):
             continue
         fulltext = (item.title + item.selftext).lower()
-        if_match = any(s in fulltext for s in wordlist)
+        #if_match = any(s[0] in fulltext for s in wordlist)
 
-        if if_match:
-            if item.id in processed:
-                continue
-            
-            processed.add(item.id)
+        if_match = []
+        for w,u in wordlist:
+            if w in fulltext:
+                if_match.append(u)
 
+        if len(if_match)>0:
+            log.info("matched %d users"%len(if_match))
+
+        for matched_user in if_match:
+                        
             log.info( item.title)
             
             short = (fulltext[:60] + '..') if len(fulltext) > 60 else fulltext
 
-            r.send_message('rantonels','modQ match: %s'%short,\
+            author = item.author.name
+
+            r.send_message(matched_user,'modQ match: %s'%short,\
                     "A match to your wordlist was found for the following question:\n\n"+\
                     "**%s**\n\n"%item.title+\
                     "%s\n\n"%item.selftext+\
-                    "[%s](%s)"%(item.short_link,item.short_link ))
+                    "*by* u/%s\n\n"%(author,author)+\
+                    "[%s](%s)\n\n\n\n"%(item.short_link,item.short_link )+\
+                    "(Please do not reply to me)"\
+                    )
+
+        if len(if_match)>0:
+            donelist.add(item.id)
+
+    cPickle.dump(donelist, open("donelist",'w'))
 
     for i in range(60):
         log.debug("sleeping %d..."%i)
