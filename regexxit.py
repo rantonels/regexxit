@@ -116,7 +116,7 @@ while True:
                     "A match to your wordlist was found for the following question:\n\n"+\
                     "**%s**\n\n"%item.title+\
                     "%s\n\n"%item.selftext+\
-                    "*by* u/%s\n\n"%(author,author)+\
+                    "*by* u/%s\n\n"%author+\
                     "[%s](%s)\n\n\n\n"%(item.short_link,item.short_link )+\
                     "(Please do not reply to me)"\
                     )
