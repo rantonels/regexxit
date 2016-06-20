@@ -56,8 +56,8 @@ vl = User()
 vl.wordlist = [ "galax", "orbit", "neutron", "nuclear", "fart"]
 
 db.ulist["rantonels"] = rantonels
-db.ulist["StringOfLights"] = sol
-db.ulist["VeryLittle"] = vl
+#db.ulist["StringOfLights"] = sol
+#db.ulist["VeryLittle"] = vl
 
 
 
@@ -96,6 +96,16 @@ while True:
             log.info("got command...")
             m.mark_as_read()
             log.info("from %s"%m.author.name)
+            words = m.body.lower().strip().split(' ')
+            if (len(words) == 0) or (words[0] != "set"):
+                indb = (m.author.name in db.ulist)
+                if indb:
+                    boddy = "your current wordlist is as follows:\n\n"+\
+                            ",".join(db.ulist[m.author.name].wordlist)+"\n\n"\
+                            "Cool, right? You can change it by sending me a PM with subject \"MQ\""
+                r.send_message(m.author,"MQ","Hi!\n\n"+boddy)
+
+                        
 
 
     log.info("getting modqueue")
