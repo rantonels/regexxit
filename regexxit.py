@@ -38,6 +38,12 @@ except:
     logging.warning("donelist file not found, creating from scratch")
     donelist = set([])
 
+try:
+    donemessagelist = cPickle.load(open("donemsg",'r'))
+except:
+    logging.warning("donemsg file not found, creating from scratch")
+    donemessagelist = []
+
 db = Database()
 
 rantonels = User()
@@ -81,6 +87,17 @@ r.send_message('rantonels','Hey daddy!','starting up!')
 
 
 while True:
+
+    log.info("getting PMs")
+    pms = r.get_unread(limit=20)
+
+    for m in pms:
+        if m.subject = "MQ":
+            log.info("got command...")
+            m.mark_as_read()
+            log.info("from %s"%m.author.name)
+
+
     log.info("getting modqueue")
     queue = r.get_mod_queue(subreddit="askscience")
 
