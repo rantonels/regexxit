@@ -92,7 +92,7 @@ while True:
     pms = r.get_unread(limit=20)
 
     for m in pms:
-        if m.subject = "MQ":
+        if m.subject == "MQ":
             log.info("got command...")
             m.mark_as_read()
             log.info("from %s"%m.author.name)
