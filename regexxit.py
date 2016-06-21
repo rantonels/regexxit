@@ -44,20 +44,24 @@ except:
     logging.warning("donemsg file not found, creating from scratch")
     donemessagelist = []
 
-db = Database()
+try:
+    db = cPickle.load(open('database','r'))
+except:
+    logging.warning("database file not found, creating empty")
+    db = Database()
 
-rantonels = User()
-rantonels.wordlist = ['string','supersymmetry','holography','hologram','holographic','monopole','field','grand uni','great uni','quantum','entropy','planck','plank','renormalization','neutrino','blackhole','black hole','Hawking','spacetime','space-time','extra dimension','calabi','m theory','m-theory']
+    rantonels = User()
+    rantonels.wordlist = ['string','supersymmetry','holography','hologram','holographic','monopole','field','grand uni','great uni','quantum','entropy','planck','plank','renormalization','neutrino','blackhole','black hole','Hawking','spacetime','space-time','extra dimension','calabi','m theory','m-theory']
 
-sol = User()
-sol.wordlist = ["crocodile", "alligator", "dinosaur", "fossil", "paleontology", "paleontologist"]
+    sol = User()
+    sol.wordlist = ["crocodile", "alligator", "dinosaur", "fossil", "paleontology", "paleontologist"]
 
-vl = User()
-vl.wordlist = [ "galax", "orbit", "neutron", "nuclear", "fart"]
+    vl = User()
+    vl.wordlist = [ "galax", "orbit", "neutron", "nuclear", "fart"]
 
-db.ulist["rantonels"] = rantonels
-#db.ulist["StringOfLights"] = sol
-#db.ulist["VeryLittle"] = vl
+    db.ulist["rantonels"] = rantonels
+    #db.ulist["StringOfLights"] = sol
+    #db.ulist["VeryLittle"] = vl
 
 
 
@@ -68,7 +72,7 @@ log.setLevel(logging.DEBUG)
 format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 ch = logging.StreamHandler(sys.stdout)
 ch.setFormatter(format)
-log.addHandler(ch)
+log.handlers[:] = [ch]
 
 
 
@@ -97,16 +101,31 @@ while True:
             m.mark_as_read()
             log.info("from %s"%m.author.name)
             words = m.body.lower().strip().split(' ')
+            boddy_instr ="sending me a PM with subject \"MQ\" and body \"set word1 word2 word3 ... lastword\" (without the quotes!)"
             if (len(words) == 0) or (words[0] != "set"):
                 indb = (m.author.name in db.ulist)
+
                 if indb:
                     boddy = "your current wordlist is as follows:\n\n"+\
                             ",".join(db.ulist[m.author.name].wordlist)+"\n\n"\
-                            "Cool, right? You can change it by sending me a PM with subject \"MQ\""
-                r.send_message(m.author,"MQ","Hi!\n\n"+boddy)
+                            "Cool, right? You can change it by "      + boddy_instr + \
+                            "\n\nIf you want to disable it completely, just send me a PM with subject \"MQ\" and body \"set\"."
+                else:
+                    boddy = "You're not in the database :(.\n\n"+\
+                            "If you want to start receiving notifications from the modqueue, register your wordlist by" + boddy_instr
+                            
+            else:
+                words_list = words[1:]
+                if not (m.author.name in db.ulist):
+                    db.ulist[m.author.name] = User()
 
-                        
+                db.ulist[m.author.name].wordlist = words_list
 
+                boddy = "I have set your wordlist to the following:\n\n"+\
+                        ", ".join(db.ulist[m.author.name].wordlist) + "\n\n" +\
+                        "If this is not what you wanted, you can change it by "+boddy_instr
+
+            r.send_message(m.author,"MQ","Hi %s!\n\n"%m.author.name+boddy)
 
     log.info("getting modqueue")
     queue = r.get_mod_queue(subreddit="askscience")
@@ -127,10 +146,10 @@ while True:
         fulltext = (item.title + item.selftext).lower()
         #if_match = any(s[0] in fulltext for s in wordlist)
 
-        if_match = []
+        if_match = set([])
         for w,u in wordlist:
             if w in fulltext:
-                if_match.append(u)
+                if_match.add(u)
 
         if len(if_match)>0:
             log.info("matched %d users"%len(if_match))
@@ -155,8 +174,11 @@ while True:
         if len(if_match)>0:
             donelist.add(item.id)
 
+    log.info("dumping...")
     cPickle.dump(donelist, open("donelist",'w'))
+    cPickle.dump(db, open('database','w'))
 
-    for i in range(60):
+
+    for i in range(15):
         log.debug("sleeping %d..."%i)
         time.sleep(1)
