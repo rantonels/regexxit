@@ -3,7 +3,20 @@ import logging
 from logging.handlers import RotatingFileHandler
 import sys
 import time
-import cPickle
+from pickle import load,dump
+
+
+# logging setup
+
+
+log = logging.getLogger('')
+log.setLevel(logging.DEBUG)
+format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+ch = logging.StreamHandler(sys.stdout)
+ch.setFormatter(format)
+log.handlers[:] = [ch]
+
+
 
 
 # user class def
@@ -15,8 +28,9 @@ class User:
 # database
 
 class Database:
-    ulist = {}
-    processed = set([])
+    def __init__(self):
+        self.ulist = {}
+        self.processed = set([])
 
     def getUser(self,uname):
         if uname in self.ulist:
@@ -33,20 +47,21 @@ class Database:
 
 
 try:
-    donelist = cPickle.load(open("donelist",'r'))
-except:
+    donelist = load(open("donelist",'r'))
+except IOError:
     logging.warning("donelist file not found, creating from scratch")
     donelist = set([])
 
-try:
-    donemessagelist = cPickle.load(open("donemsg",'r'))
-except:
-    logging.warning("donemsg file not found, creating from scratch")
-    donemessagelist = []
+donemessagelist = []
+
+
+logging.warning("mothar")
 
 try:
-    db = cPickle.load(open('database','r'))
-except:
+    db = load(open('database','r'))
+    logging.info("correctly loaded db file.")
+    logging.info("%d entries loaded."%len(db.ulist))
+except IOError:
     logging.warning("database file not found, creating empty")
     db = Database()
 
@@ -63,16 +78,6 @@ except:
     #db.ulist["StringOfLights"] = sol
     #db.ulist["VeryLittle"] = vl
 
-
-
-
-
-log = logging.getLogger('')
-log.setLevel(logging.DEBUG)
-format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-ch = logging.StreamHandler(sys.stdout)
-ch.setFormatter(format)
-log.handlers[:] = [ch]
 
 
 
@@ -97,7 +102,7 @@ while True:
 
     for m in pms:
         words_all = m.body.lower().strip().split(' ')
-        if len(words_all>0) and (words_all[0] == "MQ"):
+        if (len(words_all)>0) and (words_all[0] == "mq"):
             log.info("got command...")
             m.mark_as_read()
             log.info("from %s"%m.author.name)
@@ -108,6 +113,9 @@ while True:
                 words = ["none"]
             if words[0] == "set":
                 words_list = words[1:]
+
+                words_list = [w for w in words_list if len(w) > 2]
+
                 if not (m.author.name in db.ulist):
                     db.ulist[m.author.name] = User()
 
@@ -115,6 +123,7 @@ while True:
 
                 boddy = "I have set your wordlist to the following:\n\n"+\
                         ", ".join(db.ulist[m.author.name].wordlist) + "\n\n" +\
+                        "(note that I ignore words shorter than three letters).\n\n"+\
                         "If this is not what you wanted, you can change it by "+boddy_instr
             elif words[0] == "restart":
                 if m.author.name == "rantonels":
@@ -183,8 +192,8 @@ while True:
             donelist.add(item.id)
 
     log.info("dumping...")
-    cPickle.dump(donelist, open("donelist",'w'))
-    cPickle.dump(db, open('database','w'))
+    dump(donelist, open("donelist",'w'))
+    dump(db, open('database','w'))
 
 
     for i in range(15):
