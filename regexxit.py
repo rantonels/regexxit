@@ -96,13 +96,30 @@ while True:
     pms = r.get_unread(limit=20)
 
     for m in pms:
-        if m.subject == "MQ":
+        words_all = m.body.lower().strip().split(' ')
+        if len(words_all>0) and (words_all[0] == "MQ"):
             log.info("got command...")
             m.mark_as_read()
             log.info("from %s"%m.author.name)
-            words = m.body.lower().strip().split(' ')
+            words = words_all[1:]
             boddy_instr ="sending me a PM with subject \"MQ\" and body \"set word1 word2 word3 ... lastword\" (without the quotes!)"
-            if (len(words) == 0) or (words[0] != "set"):
+
+            if len(words) == 0:
+                words = ["none"]
+            if words[0] == "set":
+                words_list = words[1:]
+                if not (m.author.name in db.ulist):
+                    db.ulist[m.author.name] = User()
+
+                db.ulist[m.author.name].wordlist = words_list
+
+                boddy = "I have set your wordlist to the following:\n\n"+\
+                        ", ".join(db.ulist[m.author.name].wordlist) + "\n\n" +\
+                        "If this is not what you wanted, you can change it by "+boddy_instr
+            elif words[0] == "restart":
+                if m.author.name == "rantonels":
+                    exit()
+            else:
                 indb = (m.author.name in db.ulist)
 
                 if indb:
@@ -114,16 +131,7 @@ while True:
                     boddy = "You're not in the database :(.\n\n"+\
                             "If you want to start receiving notifications from the modqueue, register your wordlist by" + boddy_instr
                             
-            else:
-                words_list = words[1:]
-                if not (m.author.name in db.ulist):
-                    db.ulist[m.author.name] = User()
-
-                db.ulist[m.author.name].wordlist = words_list
-
-                boddy = "I have set your wordlist to the following:\n\n"+\
-                        ", ".join(db.ulist[m.author.name].wordlist) + "\n\n" +\
-                        "If this is not what you wanted, you can change it by "+boddy_instr
+ 
 
             r.send_message(m.author,"MQ","Hi %s!\n\n"%m.author.name+boddy)
 
