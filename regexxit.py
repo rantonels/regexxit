@@ -58,7 +58,7 @@ donemessagelist = []
 logging.warning("mothar")
 
 try:
-    db = load(open('database','r'))
+    db = load(open('databata','r'))
     logging.info("correctly loaded db file.")
     logging.info("%d entries loaded."%len(db.ulist))
 except IOError:
@@ -193,7 +193,7 @@ while True:
 
     log.info("dumping...")
     dump(donelist, open("donelist",'w'))
-    dump(db, open('database','w'))
+    dump(db, open('databata','w'))
 
 
     for i in range(15):
