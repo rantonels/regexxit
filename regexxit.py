@@ -179,7 +179,9 @@ while True:
 
             author = item.author.name
 
-            r.send_message(matched_user,'modQ match: %s'%short,\
+            recipient = "gamedev256" # = matched_user
+
+            r.send_message(recipient,'modQ match: %s'%short,\
                     "A match to your wordlist was found for the following question:\n\n"+\
                     "**%s**\n\n"%item.title+\
                     "%s\n\n"%item.selftext+\
