@@ -100,49 +100,54 @@ while True:
     log.info("getting PMs")
     pms = r.get_unread(limit=20)
 
-    for m in pms:
-        words_all = m.body.lower().strip().split(' ')
-        if (len(words_all)>0) and (words_all[0] == "mq"):
-            log.info("got command...")
-            m.mark_as_read()
-            log.info("from %s"%m.author.name)
-            words = words_all[1:]
-            boddy_instr ="sending me a PM with subject \"MQ\" and body \"set word1 word2 word3 ... lastword\" (without the quotes!)"
+    try:
+        for m in pms:
+            words_all = m.body.lower().strip().split(' ')
+            if (len(words_all)>0) and (words_all[0] == "mq"):
+                log.info("got command...")
+                m.mark_as_read()
+                log.info("from %s"%m.author.name)
+                words = words_all[1:]
+                boddy_instr ="sending me a PM with subject \"MQ\" and body \"set word1 word2 word3 ... lastword\" (without the quotes!)"
 
-            if len(words) == 0:
-                words = ["none"]
-            if words[0] == "set":
-                words_list = words[1:]
+                if len(words) == 0:
+                    words = ["none"]
+                if words[0] == "set":
+                    words_list = words[1:]
 
-                words_list = [w for w in words_list if len(w) > 2]
+                    words_list = [w for w in words_list if len(w) > 2]
 
-                if not (m.author.name in db.ulist):
-                    db.ulist[m.author.name] = User()
+                    if not (m.author.name in db.ulist):
+                        db.ulist[m.author.name] = User()
 
-                db.ulist[m.author.name].wordlist = words_list
+                    db.ulist[m.author.name].wordlist = words_list
 
-                boddy = "I have set your wordlist to the following:\n\n"+\
-                        ", ".join(db.ulist[m.author.name].wordlist) + "\n\n" +\
-                        "(note that I ignore words shorter than three letters).\n\n"+\
-                        "If this is not what you wanted, you can change it by "+boddy_instr
-            elif words[0] == "restart":
-                if m.author.name == "rantonels":
-                    exit()
-            else:
-                indb = (m.author.name in db.ulist)
-
-                if indb:
-                    boddy = "your current wordlist is as follows:\n\n"+\
-                            ",".join(db.ulist[m.author.name].wordlist)+"\n\n"\
-                            "Cool, right? You can change it by "      + boddy_instr + \
-                            "\n\nIf you want to disable it completely, just send me a PM with subject \"MQ\" and body \"set\"."
+                    boddy = "I have set your wordlist to the following:\n\n"+\
+                            ", ".join(db.ulist[m.author.name].wordlist) + "\n\n" +\
+                            "(note that I ignore words shorter than three letters).\n\n"+\
+                            "If this is not what you wanted, you can change it by "+boddy_instr
+                elif words[0] == "restart":
+                    if m.author.name == "rantonels":
+                        exit()
                 else:
-                    boddy = "You're not in the database :(.\n\n"+\
-                            "If you want to start receiving notifications from the modqueue, register your wordlist by" + boddy_instr
-                            
- 
+                    indb = (m.author.name in db.ulist)
 
-            r.send_message(m.author,"MQ","Hi %s!\n\n"%m.author.name+boddy)
+                    if indb:
+                        boddy = "your current wordlist is as follows:\n\n"+\
+                                ",".join(db.ulist[m.author.name].wordlist)+"\n\n"\
+                                "Cool, right? You can change it by "      + boddy_instr + \
+                                "\n\nIf you want to disable it completely, just send me a PM with subject \"MQ\" and body \"set\"."
+                    else:
+                        boddy = "You're not in the database :(.\n\n"+\
+                                "If you want to start receiving notifications from the modqueue, register your wordlist by" + boddy_instr
+                                
+     
+
+                r.send_message(m.author,"MQ","Hi %s!\n\n"%m.author.name+boddy)
+    except Exception as e:
+        log.error(traceback.format_exc())
+        
+
 
     log.info("getting modqueue")
     queue = r.get_mod_queue(subreddit="askscience")
@@ -179,16 +184,26 @@ while True:
 
             author = item.author.name
 
-            recipient = "gamedev256" # = matched_user
+            recipient = matched_user
 
-            r.send_message(recipient,'modQ match: %s'%short,\
-                    "A match to your wordlist was found for the following question:\n\n"+\
-                    "**%s**\n\n"%item.title+\
-                    "%s\n\n"%item.selftext+\
-                    "*by* u/%s\n\n"%author+\
-                    "[%s](%s)\n\n\n\n"%(item.short_link,item.short_link )+\
-                    "(Please do not reply to me)"\
-                    )
+            try:
+                post_text = item.selftext 
+            except praw.errors.APIException:
+                post_text = "Error in retrieving post self-text."
+            
+            try:
+
+                r.send_message(recipient,'modQ match: %s'%short,\
+                        "A match to your wordlist was found for the following question:\n\n"+\
+                        "**%s**\n\n"%item.title+\
+                        "%s\n\n"%post_text+\
+                        "*by* u/%s\n\n"%author+\
+                        "[%s](%s)\n\n\n\n"%(item.short_link,item.short_link )+\
+                        "(Please do not reply to me)"\
+                        )
+            except:
+                log.error("Error processing item.")
+                pass
 
         if len(if_match)>0:
             donelist.add(item.id)
@@ -198,6 +213,6 @@ while True:
     dump(db, open('databata','w'))
 
 
+    log.info("sleeping.")
     for i in range(15):
-        log.debug("sleeping %d..."%i)
         time.sleep(1)
