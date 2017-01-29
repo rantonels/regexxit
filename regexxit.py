@@ -1,3 +1,13 @@
+from os.path import join, dirname
+from dotenv import load_dotenv
+import os
+
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
+client_id = os.environ.get("REDDIT_CLIENT_ID")
+client_secret = os.environ.get("REDDIT_CLIENT_SECRET")
+
 import praw
 import logging
 from logging.handlers import RotatingFileHandler
@@ -84,21 +94,26 @@ except IOError:
 user_agent = "regexxit"
 
 log.debug("starting to Reddit")
-r = praw.Reddit(user_agent=user_agent)
 
 username,password = (s.strip() for s in open('login','r').readlines())
 
-log.info("login")
-r.login(username,password,disable_warning=True)
+r = praw.Reddit(user_agent=user_agent, client_id = client_id, client_secret = client_secret, username=username, password = password)
 
-r.send_message('rantonels','Hey daddy!','starting up!')
+
+#log.info("login")
+#r.login(username,password,disable_warning=True)
+
+daddy = r.redditor("rantonels")
+askscience = r.subreddit("askscience")
+
+daddy.message('Hey daddy!','starting up!')
 
 
 
 while True:
 
     log.info("getting PMs")
-    pms = r.get_unread(limit=20)
+    pms = r.inbox.unread(limit=20)
 
     try:
         for m in pms:
@@ -143,14 +158,18 @@ while True:
                                 
      
 
-                r.send_message(m.author,"MQ","Hi %s!\n\n"%m.author.name+boddy)
+                m.author.message("MQ","Hi %s!\n\n"%m.author.name+boddy)
     except Exception as e:
-        log.error(traceback.format_exc())
-        
+        #log.error(traceback.format_exc())
+        log.error(e)
 
 
     log.info("getting modqueue")
-    queue = r.get_mod_queue(subreddit="askscience")
+    
+    
+
+    #queue = r.get_mod_queue(subreddit="askscience")
+    queue = askscience.mod.modqueue()
 
     log.debug("recomputing wordlist")
 
@@ -163,7 +182,7 @@ while True:
                 continue
 
 
-        if isinstance(item,praw.objects.Comment):
+        if isinstance(item,praw.models.Comment):
             continue
         fulltext = (item.title + item.selftext).lower()
         #if_match = any(s[0] in fulltext for s in wordlist)
@@ -184,7 +203,7 @@ while True:
 
             author = item.author.name
 
-            recipient = matched_user
+            recipient = r.redditor(matched_user)
 
             try:
                 post_text = item.selftext 
@@ -193,16 +212,17 @@ while True:
             
             try:
 
-                r.send_message(recipient,'modQ match: %s'%short,\
+                recipient.message('modQ match: %s'%short,\
                         "A match to your wordlist was found for the following question:\n\n"+\
                         "**%s**\n\n"%item.title+\
                         "%s\n\n"%post_text+\
                         "*by* u/%s\n\n"%author+\
-                        "[%s](%s)\n\n\n\n"%(item.short_link,item.short_link )+\
+                        "[%s](%s)\n\n\n\n"%(item.shortlink,item.shortlink )+\
                         "(Please do not reply to me)"\
                         )
-            except:
+            except Exception as e:
                 log.error("Error processing item.")
+                log.error(e)
                 pass
 
         if len(if_match)>0:
