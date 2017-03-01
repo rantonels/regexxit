@@ -96,6 +96,7 @@ user_agent = "regexxit"
 log.debug("starting to Reddit")
 
 username,password = (s.strip() for s in open('login','r').readlines())
+log.info(username+":"+password)
 
 r = praw.Reddit(user_agent=user_agent, client_id = client_id, client_secret = client_secret, username=username, password = password)
 
@@ -171,12 +172,14 @@ while True:
     #queue = r.get_mod_queue(subreddit="askscience")
     queue = askscience.mod.modqueue()
 
+
     log.debug("recomputing wordlist")
 
     wordlist = db.getTotalWordlist()
 
 
     for item in queue:
+        
 
         if item.id in donelist:
                 continue
